@@ -1,6 +1,6 @@
 ola mundo 
 
-## Dale mami NPM
+## Dale NPM
 
 parar instalar modulos npm install <Nombre>
 
