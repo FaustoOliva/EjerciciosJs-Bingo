@@ -11,7 +11,8 @@ let arrayFinal=[];
 for (let i = 0; i < data2.length; i++) {
    
     const squareRoot = Math.sqrt(data2[i]).toFixed(2); //Limita el numero a dos decimales 
-    const rounded = Number(squareRoot); // Lo convierte en número
+    const rounded = Math.round(squareRoot*100)/100; // Lo convierte en número
+    //const rounded = Number(squareRoot);
     //const rounded = parseFloat(squareRoot);
     //const rounded = number(squareRoot);
     

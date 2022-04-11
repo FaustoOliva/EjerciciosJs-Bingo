@@ -1,6 +1,8 @@
 //Dado el array multiplicar todos sus valores por el que se encuentra en la posicion anterior 
 //menos al siguiente, sin modificar el array original
- 
+
+// typeof es un operador que devuelve el tipo de dato que es
+// (true/false) ? true : false;  es como un if y un else en una linea
 const data = [
     2, 3, 5, 12, 54, 5, -1, 0, 4, 23, 66, 7
 ]
