@@ -19,7 +19,6 @@ for(const palo of palos){
 }
 
 console.log(mazo);
-
 let count = 0;
 
 for(const carta of mazo){
@@ -44,15 +43,27 @@ for (let index = 0; index < 6; index++) {
 
 console.log(eliminadas);
 
+console.log(`Se eliminan las cartas ${JSON.stringify(eliminadas)}`)
+
 let suma = 0;
-let count = 0;
+count = 0;
 
 for (let index = 0; index < mazo.length; index++) {
     const carta = mazo[index];
     
     if(!eliminadas.includes(carta.figura) && typeof carta.figura==="number"){
         count ++;
-        suma +- carta.figura;
+        suma += carta.figura;
     }
 }
 const promedio = suma /count;
+
+const limites = 1000;
+let promedioTotal;
+
+for (let index = 0; index < limites; index++) {
+    suma += promedio;
+    promedioTotal = suma / limites;
+}
+
+console.log(`El promedio es ${promedioTotal}`);
