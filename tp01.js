@@ -2,40 +2,129 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-const process_data = () => {
-
-    let x = 100;
-
-    return {
-        resultado: x
-    };
-};
-
 app.use(express.json());
-	
-app.post("/Aleatorie", function (req,res){
+
+app.post("/Aleatorie", function (req, res) {
     console.log(req.body);
-    res.send([Math.round(Math.random() * (req.body.numero-1)+1)]);
+    res.send([Math.round(Math.random() * (req.body.numero - 1) + 1)]);
 })
-app.post("/IniciarJuego", function (req, res) {
-    const numerosPorCarton=10;
-	console.log(req.body)
-	let cartones=[];
-    let carton=[]; 
-    for (let index = 0; index < req.body.numero; index++) {
-        for (let index = 0; index < numerosPorCarton; index++) {
-            carton.push(Math.round(Math.random() * (99-1)+1));
-        }
-        cartones.push(carton);
+
+let cartones = [];
+
+const CrearVector = () => {
+    const vectorNumeros = [];
+    for (let index = 1; index < 100; index++) {
+        vectorNumeros.push(index);
+
     }
-    res.send(cartones);
+    return vectorNumeros;
+}
+
+const CrearCarton = () => {
+    let carton = [];
+    Vector = CrearVector();
+    while (carton.length != 10) {
+        Rnd = Math.round(Math.random() * (99 - 1) + 1);
+        if (Vector[Rnd] != -1) {
+            carton.push(Vector[Rnd]);
+            Vector[Rnd] = -1;
+        }
+    }
+    return carton;
+}
+app.post("/IniciarJuego", function (req, res) {
+    console.log(req.body)
+    let cartonesInternos = [];
+    const numerosPorCarton = 5;
+
+
+    for (let index = 0; index < req.body.numero; index++) {
+        cartonesInternos.push(CrearCarton());
+    }
+    res.send(cartonesInternos);
+    cartones = cartonesInternos;
 });
 
-app.get("/mi_endpoint", function (req, res) {
-    res.send("respuesta");
+let nombres = [];
+
+app.get('/ObtenerCarton/:nombre', function (req, res) {
+    const nombre = req.params.nombre;
+    nombres.push(nombre);
+    console.log(nombres);
+    i = nombres.length - 1;
+
+    res.send(`El jugador le fue asignado un carton. El carton es ${cartones[i]}`);
 });
 
-app.listen(PORT, function(err){
-	if (err) console.log(err);
-	console.log("Server listening on PORT", PORT);
+app.get('/Cartones/:nombre?', function (req, res) {
+    const nombre = req.params.nombre;
+    console.log(nombre);
+    if (nombre === undefined) {
+        res.send(cartones);
+    } else {
+        const nombre = req.params.nombre;
+        console.log(nombres);
+        let i = nombres.length - 1;
+
+        res.send(`El jugador le fue asignado un carton. El carton es ${cartones[i]}`);
+    }
+
 });
+
+const validarVacio = (cartones) => {
+    for (let index = 0; index < cartones.length; index++) {
+        carton = cartones[index]
+        let contador = 0;
+        for (let j = 0; j < carton.length; j++) {
+            if(carton[j]== -1){
+                contador = contador +1;
+            }
+            if(contador == 10){return index}
+        }
+        
+    }
+    return -1;
+}
+
+const SacarBolilla = (vect) => {
+    let Rnd;  
+    let bolilla; 
+    do {
+        Rnd = (Math.round(Math.random() * (99 - 1) + 1));
+        if (vect[Rnd] != -1) {
+            bolilla = vect[Rnd];
+            vect[Rnd] = -1;
+        } else{bolilla = -1}
+        
+    } while (bolilla<0);
+    return bolilla;
+}
+
+app.get('/SacarNumero', function (req, res) {
+    VectBolilla = CrearVector();
+    while (validarVacio(cartones)==-1) {
+        Bolilla = SacarBolilla(VectBolilla);
+        for (let index = 0; index < 3; index++) {
+            carton = cartones[index]
+            for (let j = 0; j < 10; j++) {
+                console.log(`Bolilla ${Bolilla}`);
+                if (carton[j] === Bolilla) {
+                    carton[j] = -1;
+                }
+            }
+            console.log(carton);
+        }
+    }
+    if(validarVacio(cartones) > nombres.length){
+        res.send(`El carton ganador es ${validarVacio(cartones)+1}, el carton quedó vacante. Fracasados`)
+    }else{res.send(`El carton ganador es ${validarVacio(cartones)+1}, jugador ${nombres[validarVacio(cartones)]}`);
+}
+    
+});
+
+
+app.listen(PORT, function (err) {
+    if (err) console.log(err);
+    console.log("Server listening on PORT", PORT);
+});
+
