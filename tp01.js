@@ -35,8 +35,6 @@ const CrearCarton = () => {
 app.post("/IniciarJuego", function (req, res) {
     console.log(req.body)
     let cartonesInternos = [];
-    const numerosPorCarton = 5;
-
 
     for (let index = 0; index < req.body.numero; index++) {
         cartonesInternos.push(CrearCarton());
@@ -62,7 +60,6 @@ app.get('/Cartones/:nombre?', function (req, res) {
     if (nombre === undefined) {
         res.send(cartones);
     } else {
-        const nombre = req.params.nombre;
         console.log(nombres);
         let i = nombres.length - 1;
 
@@ -79,7 +76,9 @@ const validarVacio = (cartones) => {
             if(carton[j]== -1){
                 contador = contador +1;
             }
-            if(contador == 10){return index}
+            if(contador == 10){
+                return index
+            }
         }
         
     }
