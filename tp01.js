@@ -32,11 +32,14 @@ const CrearCarton = () => {
     }
     return carton;
 }
+
+cantCartones = 0;
+
 app.post("/IniciarJuego", function (req, res) {
     console.log(req.body)
     let cartonesInternos = [];
-
-    for (let index = 0; index < req.body.numero; index++) {
+    cantCartones = req.body.numero;
+    for (let index = 0; index < cantCartones; index++) {
         cartonesInternos.push(CrearCarton());
     }
     res.send(cartonesInternos);
@@ -103,7 +106,7 @@ app.get('/SacarNumero', function (req, res) {
     VectBolilla = CrearVector();
     while (validarVacio(cartones)==-1) {
         Bolilla = SacarBolilla(VectBolilla);
-        for (let index = 0; index < 3; index++) {
+        for (let index = 0; index < cantCartones; index++) {
             carton = cartones[index]
             for (let j = 0; j < 10; j++) {
                 console.log(`Bolilla ${Bolilla}`);
