@@ -102,9 +102,8 @@ const SacarBolilla = (vect) => {
     return bolilla;
 }
 
-app.get('/SacarNumero', function (req, res) {
-    VectBolilla = CrearVector();
-    while (validarVacio(cartones)==-1) {
+const Juego = () => {
+    while (validarVacio(cartones) == -1) {
         Bolilla = SacarBolilla(VectBolilla);
         for (let index = 0; index < cantCartones; index++) {
             carton = cartones[index]
@@ -117,11 +116,18 @@ app.get('/SacarNumero', function (req, res) {
             console.log(carton);
         }
     }
-    if(validarVacio(cartones) > nombres.length){
-        res.send(`El carton ganador es ${validarVacio(cartones)+1}, el carton quedó vacante. Fracasados`)
-    }else{res.send(`El carton ganador es ${validarVacio(cartones)+1}, jugador ${nombres[validarVacio(cartones)]}`);
+    return cartones;
 }
-    
+
+app.get('/SacarNumero', function (req, res) {
+    VectBolilla = CrearVector();
+    cartones = Juego();
+    if (validarVacio(cartones) > nombres.length-1) {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, el carton quedó vacante. Fracasados`)
+    } else {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
+    }
+
 });
 
 

@@ -123,12 +123,41 @@ const SacarBolilla = (vect) => {
     return bolilla;
 }
 
-app.get('/SacarNumero', function (req, res) {
-    VectBolilla = CrearVector();
+const Juego = () => {
     while (validarVacio(cartones) == -1) {
         Bolilla = SacarBolilla(VectBolilla);
         for (let index = 0; index < cantCartones; index++) {
             carton = cartones[index]
+            for (let j = 0; j < 10; j++) {
+                console.log(`Bolilla ${Bolilla}`);
+                if (carton[j] === Bolilla) {
+                    carton[j] = -1;
+                }
+            }
+            console.log(carton);
+        }
+    }
+    return cartones;
+}
+
+app.get('/SacarNumero', function (req, res) {
+    VectBolilla = CrearVector();
+    Juego();
+    if (validarVacio(cartones) > nombres.length) {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, el carton quedó vacante. Fracasados`)
+    } else {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
+    }
+
+});
+
+app.get('/JugarContinuo', function (req, res) {
+    cartonesInternos = cartones
+    VectBolilla = CrearVector();
+    while (validarVacio(cartones) == -1) {
+        Bolilla = SacarBolilla(VectBolilla);
+        for (let index = 0; index < cantCartones; index++) {
+            carton = cartonesInternos[index]
             for (let j = 0; j < 10; j++) {
                 console.log(`Bolilla ${Bolilla}`);
                 if (carton[j] === Bolilla) {
@@ -144,8 +173,8 @@ app.get('/SacarNumero', function (req, res) {
         res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
     }
 
-});
 
+});
 
 app.listen(PORT, function (err) {
     if (err) console.log(err);
