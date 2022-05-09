@@ -13,7 +13,7 @@ let cartones = [];
 
 const CrearVector = () => {
     const vectorNumeros = [];
-    for (let index = 1; index < 100; index++) {
+    for (let index = 1; index < 101; index++) {
         vectorNumeros.push(index);
 
     }
@@ -23,19 +23,33 @@ const CrearVector = () => {
 const CrearCarton = () => {
     let numeros = 15;
     let carton = [];
-    let vectDecenas = [1, 9, 10, 19, 20, 29, 30, 39, 40, 49, 50, 59, 60, 69, 70, 79, 80, 89, 90, 100]
+    let vectDecenas = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    let CantDecenas = 11
+    let decenasElegidas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    let j = 1;
     Vector = CrearVector();
-    while (carton.length != numeros) {
-        for (let index = 0; index < vectDecenas.length; index++) {
-            Rnd = Math.round(Math.random() * (vectDecenas[index+1] - vectDecenas[index]) + vectDecenas[index]); 
-            if (Vector[Rnd] != -1) {
-                carton.push(Vector[Rnd]);
-                Vector[Rnd] = -1;
+
+    for (let index = 0; index < vectDecenas.length; index++) {
+        if (index != 10) {
+            Rnd = Math.round(Math.random() * (vectDecenas[j] - vectDecenas[index]) + vectDecenas[index]);
+            if (Vector[Rnd - 1] != -1) {
+                carton.push(Vector[Rnd - 1]);
+                Vector[Rnd - 1] = -1;
             }
-            index = index + 1;
+            j = j + 1;
         }
-       
-        
+    }
+
+    for (let h = 0; h < (decenasElegidas.length / 2); h++) {
+        while (carton.length != 15) {
+            RndDec = Math.round(Math.random() * (CantDecenas - 1) + 1);
+            Rnd = Math.round(Math.random() * (vectDecenas[RndDec] - vectDecenas[RndDec - 1]) + vectDecenas[RndDec - 1]);
+            if (Vector[Rnd - 1] != -1) {
+                carton.push(Vector[Rnd - 1]);
+                Vector[Rnd - 1] = -1;
+                decenasElegidas[RndDec] = -1;
+            }
+        }
     }
     return carton;
 }
@@ -83,35 +97,35 @@ const validarVacio = (cartones) => {
         carton = cartones[index]
         let contador = 0;
         for (let j = 0; j < carton.length; j++) {
-            if(carton[j]== -1){
-                contador = contador +1;
+            if (carton[j] == -1) {
+                contador = contador + 1;
             }
-            if(contador == 10){
+            if (contador == 10) {
                 return index
             }
         }
-        
+
     }
     return -1;
 }
 
 const SacarBolilla = (vect) => {
-    let Rnd;  
-    let bolilla; 
+    let Rnd;
+    let bolilla;
     do {
         Rnd = (Math.round(Math.random() * (99 - 1) + 1));
         if (vect[Rnd] != -1) {
             bolilla = vect[Rnd];
             vect[Rnd] = -1;
-        } else{bolilla = -1}
-        
-    } while (bolilla<0);
+        } else { bolilla = -1 }
+
+    } while (bolilla < 0);
     return bolilla;
 }
 
 app.get('/SacarNumero', function (req, res) {
     VectBolilla = CrearVector();
-    while (validarVacio(cartones)==-1) {
+    while (validarVacio(cartones) == -1) {
         Bolilla = SacarBolilla(VectBolilla);
         for (let index = 0; index < cantCartones; index++) {
             carton = cartones[index]
@@ -124,11 +138,12 @@ app.get('/SacarNumero', function (req, res) {
             console.log(carton);
         }
     }
-    if(validarVacio(cartones) > nombres.length){
-        res.send(`El carton ganador es ${validarVacio(cartones)+1}, el carton quedó vacante. Fracasados`)
-    }else{res.send(`El carton ganador es ${validarVacio(cartones)+1}, jugador ${nombres[validarVacio(cartones)]}`);
-}
-    
+    if (validarVacio(cartones) > nombres.length) {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, el carton quedó vacante. Fracasados`)
+    } else {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
+    }
+
 });
 
 
