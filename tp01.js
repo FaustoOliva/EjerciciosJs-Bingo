@@ -4,12 +4,17 @@ const PORT = 3000;
 
 app.use(express.json());
 
+//Variables globales
+let cartones = [];
+let cantCartones = 0;
+let nombres = [];
+
 app.post("/Aleatorie", function (req, res) {
     console.log(req.body);
     res.send([Math.round(Math.random() * (req.body.numero - 1) + 1)]);
 })
 
-let cartones = [];
+
 
 const CrearVector = () => {
     const vectorNumeros = [];
@@ -33,8 +38,6 @@ const CrearCarton = () => {
     return carton;
 }
 
-cantCartones = 0;
-
 app.post("/IniciarJuego", function (req, res) {
     console.log(req.body)
     let cartonesInternos = [];
@@ -45,8 +48,6 @@ app.post("/IniciarJuego", function (req, res) {
     res.send(cartonesInternos);
     cartones = cartonesInternos;
 });
-
-let nombres = [];
 
 app.get('/ObtenerCarton/:nombre', function (req, res) {
     const nombre = req.params.nombre;
@@ -76,29 +77,29 @@ const validarVacio = (cartones) => {
         carton = cartones[index]
         let contador = 0;
         for (let j = 0; j < carton.length; j++) {
-            if(carton[j]== -1){
-                contador = contador +1;
+            if (carton[j] == -1) {
+                contador = contador + 1;
             }
-            if(contador == 10){
+            if (contador == 10) {
                 return index
             }
         }
-        
+
     }
     return -1;
 }
 
 const SacarBolilla = (vect) => {
-    let Rnd;  
-    let bolilla; 
+    let Rnd;
+    let bolilla;
     do {
         Rnd = (Math.round(Math.random() * (99 - 1) + 1));
         if (vect[Rnd] != -1) {
             bolilla = vect[Rnd];
             vect[Rnd] = -1;
-        } else{bolilla = -1}
-        
-    } while (bolilla<0);
+        } else { bolilla = -1 }
+
+    } while (bolilla < 0);
     return bolilla;
 }
 
@@ -122,7 +123,7 @@ const Juego = () => {
 app.get('/SacarNumero', function (req, res) {
     VectBolilla = CrearVector();
     cartones = Juego();
-    if (validarVacio(cartones) > nombres.length-1) {
+    if (validarVacio(cartones) > nombres.length - 1) {
         res.send(`El carton ganador es ${validarVacio(cartones) + 1}, el carton quedó vacante. Fracasados`)
     } else {
         res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);

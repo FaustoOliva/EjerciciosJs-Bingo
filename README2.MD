@@ -17,6 +17,9 @@ El juego comienza llamando al endpoint iniciar_juego que crea los cartones. Los 
 
 Extra: 
 
- 1.El cartón tiene que tener 15 números repartidos entre las 10 decenas de los 100 números posibles de manera
-   que en cada decena (por ejemplo del 1 al 9, del 10 al 19, etc) existen 1 o 2 números
+ 1.El cartón tiene que tener 15 números repartidos entre las 10 decenas de los 100 números posibles de manera que en cada decena (por ejemplo del 1 al 9, del 10 al 19, etc) existen 1 o 2 números
         (1-9) (10-19) (20-29) (30-39) (40-49) (50-59) (60-69) (70-79) (80-89) (90-100)
+
+2.Se debe crear un endpoint (jugar_continuo) que saca todos los números necesarios para terminar el bingo y devuelve el cartón ganador y todos los números que fueron sacados durante el juego
+
+3.La cantidad de números de un cartón se debe poder modificar en el inicio del juego, siendo 15 el número predeterminado.

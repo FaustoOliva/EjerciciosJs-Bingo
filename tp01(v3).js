@@ -68,8 +68,7 @@ app.post("/IniciarJuego", function (req, res) {
         cartonesInternos.push(CrearCarton());
     }
     res.send(cartonesInternos);
-    console.log(cartonesInternos);
-    cartones = cartonesInternos; 
+    cartones = cartonesInternos;
 });
 
 
@@ -97,9 +96,9 @@ app.get('/Cartones/:nombre?', function (req, res) {
 
 });
 
-const validarVacio = () => { //Valida cuando hay un ganador. Contando cuantos numeros salieron del carton, ya que los reemplazamos por '-1'
-    for (let index = 0; index < cartones.length; index++) {
-        carton = cartones[index]
+const validarVacio = (Internos) => { //Valida cuando hay un ganador. Contando cuantos numeros salieron del carton, ya que los reemplazamos por '-1'
+    for (let index = 0; index < Internos.length; index++) {
+        carton = Internos[index]
         let contador = 0;
         for (let j = 0; j < carton.length; j++) {
             if (carton[j] == -1) {
@@ -128,21 +127,21 @@ const SacarBolilla = (vect) => { //Con los numeros disponibles del bingo, saca n
     return bolilla;
 }
 
-const Juego = () => { //La logica del juego, llamando a las diferentes funciones
-    while (validarVacio(cartones) == -1) {
+const Juego = (Internos) => { //La logica del juego, llamando a las diferentes funciones
+    while (validarVacio(Internos) == -1) {
         Bolilla = SacarBolilla(VectBolilla);
-        console.log(`Bolilla ${Bolilla}`);
         for (let index = 0; index < cantCartones; index++) {
-            carton = cartones[index]
+            carton = Internos[index]
             for (let j = 0; j < NUMEROS_EN_CARTONES; j++) {
+                console.log(`Bolilla ${Bolilla}`);
                 if (carton[j] === Bolilla) {
                     carton[j] = -1;
                 }
             }
-            console.log(carton);
+            console.log(Internos);
         }
     }
-    return cartones;
+    return Internos;
 }
 
 app.get('/SacarNumero', function (req, res) {
@@ -153,6 +152,23 @@ app.get('/SacarNumero', function (req, res) {
     } else {
         res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
     }
+
+});
+
+app.get('/JugarContinuo', function (req, res) {
+    cartonesInternos = cartones
+    let internos;
+    VectBolilla = CrearVector();
+    internos = Juego(cartones);
+    console.log("Internos " + cartonesInternos)
+    console.log("Cartones " + cartones)
+    console.log(internos)
+    if (validarVacio(cartones) > nombres.length - 1) {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}[${cartonesInternos[validarVacio(cartones)]}], el carton quedó vacante. Fracasados`)
+    } else {
+        res.send(`El carton ganador es ${validarVacio(cartones) + 1}[${cartones[validarVacio(cartones)]}], jugador ${nombres[validarVacio(cartones)]}`);
+    }
+
 
 });
 
