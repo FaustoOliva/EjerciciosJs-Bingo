@@ -62,13 +62,14 @@ const CrearCarton = () => { //Crea el carton con los numeros disponibles del bin
 
 app.post("/IniciarJuego", function (req, res) {
     console.log(req.body)
-    let cartonesInternos = [];
+    let cartonesInternos1 = [];
     cantCartones = req.body.numero;
     for (let index = 0; index < cantCartones; index++) {
-        cartonesInternos.push(CrearCarton());
+        cartonesInternos1.push(CrearCarton());
     }
-    res.send(cartonesInternos);
-    cartones = cartonesInternos;
+    res.send(cartonesInternos1);
+    cartones = cartonesInternos1;
+    console.log(cartones);
 });
 
 
@@ -110,6 +111,7 @@ const validarVacio = (Internos) => { //Valida cuando hay un ganador. Contando cu
         }
 
     }
+
     return -1;
 }
 
@@ -128,12 +130,13 @@ const SacarBolilla = (vect) => { //Con los numeros disponibles del bingo, saca n
 }
 
 const Juego = (Internos) => { //La logica del juego, llamando a las diferentes funciones
+    console.log("en Juego 1 " + cartones);
     while (validarVacio(Internos) == -1) {
         Bolilla = SacarBolilla(VectBolilla);
+        
         for (let index = 0; index < cantCartones; index++) {
             carton = Internos[index]
             for (let j = 0; j < NUMEROS_EN_CARTONES; j++) {
-                console.log(`Bolilla ${Bolilla}`);
                 if (carton[j] === Bolilla) {
                     carton[j] = -1;
                 }
@@ -141,26 +144,14 @@ const Juego = (Internos) => { //La logica del juego, llamando a las diferentes f
             console.log(Internos);
         }
     }
+    console.log("en Juego" + cartones);
     return Internos;
 }
-
-app.get('/SacarNumero', function (req, res) {
-    VectBolilla = CrearVector();
-    Juego();
-    if (validarVacio(cartones) > nombres.length - 1) {
-        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, el carton quedó vacante. Fracasados`)
-    } else {
-        res.send(`El carton ganador es ${validarVacio(cartones) + 1}, jugador ${nombres[validarVacio(cartones)]}`);
-    }
-
-});
 
 app.get('/JugarContinuo', function (req, res) {
     let cartonesInternos = [...cartones];
     VectBolilla = CrearVector();
     cartonesInternos = Juego(cartonesInternos);
-    console.log("Internos " + cartonesInternos)
-    console.log("Cartones " + cartones)
     if (validarVacio(cartonesInternos) > nombres.length - 1) {
         res.send(`El carton ganador es ${validarVacio(cartonesInternos) + 1}[${cartones[validarVacio(cartonesInternos)]}], el carton quedó vacante. Fracasados`)
     } else {
